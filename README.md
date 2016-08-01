@@ -14,4 +14,4 @@
 5. Add your local id_rsa.pub to the authorized_keys on the remote machine to be able to login without password. Tip: use [ssh-copy-id](http://linux.die.net/man/1/ssh-copy-id).
 
 ## Usage
-1. Run this script when you're in a tweak directory created by theos.
+Run this script when you're in a tweak directory created by theos.
