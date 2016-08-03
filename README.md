@@ -15,3 +15,6 @@
 
 ## Usage
 Run this script when you're in a tweak directory created by theos.
+
+## Acknowledgements
+This script requires that you're having Jesse Bryan's (WinneonSword) [repo management files](https://github.com/winneon/tutorial-repository).
