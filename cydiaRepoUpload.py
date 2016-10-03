@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
+from config import *
 import os
 import sys
 import fnmatch
 import paramiko
-
-remote_path = "/srv/http/repo/"
-repo = "myrepo.com"
-user = "myuser"
 
 
 def errorMsg( str ):
