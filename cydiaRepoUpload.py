@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-
 from config import *
 import os
 import sys
 import fnmatch
 import paramiko
 
-
-def errorMsg( str ):
+def errorMsg(str):
   print(str)
   sys.exit()
 
@@ -29,6 +27,10 @@ else:
 
 # Print pwd
 print("Path at terminal when executing this file: \n" + os.getcwd() + "\n")
+
+# Log
+paramiko.util.log_to_file(log_file)
+print("Logging to file: \n" + os.getcwd() + "/" + log_file + "\n")
 
 
 # Get most recent .deb file with correct version number
@@ -63,21 +65,20 @@ sftp.put(newest, remote_path + filename)
 
 path = os.path.splitext(filename)[0]
 
-print("Creating directories...")
 try:
   sftp.chdir(remote_path + os.path.join(path, "DEBIAN"))  # Test if path exists
 except IOError:
+  print("Creating directories...")
   sftp.mkdir(remote_path + os.path.join(path))  # Create path
   sftp.chdir(remote_path + os.path.join(path))
   sftp.mkdir(os.path.join("DEBIAN"))
   sftp.chdir(os.path.join("DEBIAN"))
 
 
-def foundName( str, name ):
+def foundName(str, name):
   for line in str:
     if name in line:
       return True
-
   return False
 
 
@@ -88,8 +89,8 @@ sftp.put(os.getcwd() + "/control", "control")
 
 # Update packages.sh
 readFile = sftp.file(remote_path + '/packages.sh', 'r')
-if foundName( readFile, path ):
-  print "Found name already"
+if foundName(readFile, path):
+  print "Name is already in packages.sh"
 else:
   print "Could not find filename, writing..."
   writeFile = sftp.file(remote_path + '/packages.sh', 'a')
@@ -101,7 +102,10 @@ readFile.close()
 
 # Update repo
 print("Updating repo...")
-stdin, stdout, ssh_stderr = ssh.exec_command('(cd /srv/http/repo; ./update.sh)')
-print stdout.readlines()
+stdin, stdout, ssh_stderr = ssh.exec_command('cd' + remote_path + '; ./update.sh')
+result = stdout.readlines()
+
+if result:
+	print result
 
 ssh.close()
